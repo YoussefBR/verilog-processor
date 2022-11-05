@@ -25,15 +25,48 @@ module IF(
 );
 endmodule
 
+// Sequential - Updates the pc at the start of every new cycle
+module ProgramCounter(
+    input [31:0] nextPC,
+    input clk,
+    output reg [31:0] pc
+);
+
+    always@(posedge clk)begin
+        pc <= nextPC;
+    end
+
+endmodule
+
+// Combinatial - Calculates the address of the next instruction 
 module PCAdder(
     input [31:0] PC,
     output reg [31:0] nextPC
 );
 
-    localparam WORD_SIZE = 4;
+    wire [31:0] WORD_SIZE = 32'd4;
     
     always@(*)begin
-        nextPC = PC + 32'(WORD_SIZE);
+        nextPC = PC + WORD_SIZE;
+    end
+
+endmodule
+
+// Combinational - Gets the instruction at the location of the PC
+module InstructionMemory(
+    input [31:0] pc,
+    output reg [31:0] nextIns
+);
+
+    reg [31:0] memory [0:63];
+    
+    initial begin
+        memory[25] = {6'b000000, 5'b00000, 5'b00000, 5'b00000, 5'b00000, 6'b000000};
+        memory[26] = {6'b000000, 5'b00000, 5'b00000, 5'b00000, 5'b00000, 6'b000000};
+    end
+    
+    always@(*)begin
+        nextIns = memory[pc[31:2]];
     end
 
 endmodule
