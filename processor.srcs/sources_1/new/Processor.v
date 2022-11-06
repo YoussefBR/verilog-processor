@@ -5,7 +5,7 @@
 // 
 // Create Date: 11/03/2022 05:37:02 PM
 // Design Name: 
-// Module Name: 
+// Module Name:
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -24,7 +24,7 @@ module Processor(
 );
 
     // PC init
-    reg [31:0] nextPc;
+    wire [31:0] nextPc;
     wire [31:0] pc;
     Program_Counter programCount(
         // Inputs
@@ -35,7 +35,8 @@ module Processor(
     );
     // IF init
     wire [31:0] IF_pc = pc;
-    wire [31:0] IF_nextPc = nextPc;
+    wire [31:0] IF_nextPc;
+    assign nextPc = IF_nextPc;
     wire [31:0] nextIns;
 
     IF insFetch(
@@ -63,42 +64,42 @@ module Processor(
     wire wr_mem;
     wire alu_op;
     wire alu_imm;
-    reg [4:0] dest_reg;
-    reg [31:0] qa;
-    reg [31:0] qb;
-    reg [31:0] imm32;
+    wire [4:0] dest_reg;
+    wire [31:0] qa;
+    wire [31:0] qb;
+    wire [31:0] imm32;
 
-    reg wb_reg;
-    reg [4:0] wb_dest;
-    reg [31:0] wb_result;
+    wire wb_reg;
+    wire [4:0] wb_dest;
+    wire [31:0] wb_result;
 
     ID insDecode(
         // Inputs
-        .insToDecode(insToDecode),
-        .wb_reg     ( wb_reg        ),
-        .wb_dest    ( wb_dest       ),
-        .wb_result  ( wb_result     ),
+        .insToDecode    ( insToDecode   ),
+        .wb_reg         ( wb_reg        ),
+        .wb_dest        ( wb_dest       ),
+        .wb_result      ( wb_result     ),
         // Outputs
-        .wr_reg     ( wr_reg        ),
-        .mem_to_reg ( mem_to_reg    ),
-        .wr_mem     ( wr_mem        ),
-        .alu_op     ( alu_op        ),
-        .alu_imm    ( alu_imm       ),
-        .dest_reg   ( dest_reg      ),
-        .qa         ( qa            ),
-        .qb         ( qb            ),
-        .imm32      ( imm32         )
+        .wr_reg         ( wr_reg        ),
+        .mem_to_reg     ( mem_to_reg    ),
+        .wr_mem         ( wr_mem        ),
+        .alu_op         ( alu_op        ),
+        .alu_imm        ( alu_imm       ),
+        .dest_reg       ( dest_reg      ),
+        .qa             ( qa            ),
+        .qb             ( qb            ),
+        .imm32          ( imm32         )
     );
     // IDEXEPipeReg init
-    reg ewr_reg;
-    reg emem_to_reg;
-    reg ewr_mem;
-    reg ealu_op;
-    reg ealu_imm;
-    reg [4:0] edest_reg;
-    reg [31:0] eqa;
-    reg [31:0] eqb;
-    reg [31:0] eimm32;
+    wire ewr_reg;
+    wire emem_to_reg;
+    wire ewr_mem;
+    wire ealu_op;
+    wire ealu_imm;
+    wire [4:0] edest_reg;
+    wire [31:0] eqa;
+    wire [31:0] eqb;
+    wire [31:0] eimm32;
 
     ID_EXE_PipeReg ID_EXE_Pipe(
         // Inputs
@@ -169,7 +170,7 @@ module Processor(
         .wr_reg     ( ewr_reg   ),
         .dest_reg   ( edest_reg ),
         .result     ( result    ),
-        // Outputs
+        // Outputss
         .wb_reg     ( wb_reg    ),
         .wb_dest    ( wb_dest   ),
         .wb_result  ( wb_dest   )
