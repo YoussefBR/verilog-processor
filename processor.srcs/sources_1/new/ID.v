@@ -21,27 +21,27 @@
 
 
 module ID(
-    input [31:0] insToDecode 
+    input [31:0] insToDecode, 
 
-    output reg wr_reg;
-    output reg m_2_reg;
-    output reg wr_mem;
-    output reg alu_op;
-    output reg alu_imm;
+    output reg wr_reg,
+    output reg m_2_reg,
+    output reg wr_mem,
+    output reg alu_op,
+    output reg alu_imm
 );
 
 endmodule
 
 module ControlUnit(
     input [5:0] op,
-    input [5:0] func
+    input [5:0] func,
 
-    output reg wr_reg;
-    output reg mem_to_reg;
-    output reg wr_mem;
-    output reg [3:0] alu_op;
-    output reg alu_imm;
-    output reg dest_rt;
+    output reg wr_reg,
+    output reg mem_to_reg,
+    output reg wr_me,
+    output reg [3:0] alu_op,
+    output reg alu_imm,
+    output reg dest_rt
 );
 
     always@(*) begin
@@ -49,18 +49,21 @@ module ControlUnit(
             6'b000000:
             begin
                 case(func)
+                    // Add signals
                     6'b100000:
-                        // Add signals
+                    begin
                         wr_reg <= 1'b1;
                         mem_to_reg <= 1'b0;
                         wr_mem <= 1'b0;
                         alu_op <= 4'b0010;
                         alu_imm <= 1'b0;
                         dest_rt <= 1'b0;
+                    end
+                endcase 
             end
+            // Load word signals
             6'b100011:
             begin
-                // Load word signals
                 wr_reg <= 1'b1;
                 mem_to_reg <= 1'b1;
                 wr_mem <= 1'b0;
@@ -68,6 +71,7 @@ module ControlUnit(
                 alu_imm <= 1'b1;
                 dest_rt <= 1'b1;
             end
+        endcase
     end
 
 endmodule
@@ -120,7 +124,7 @@ module ImmediateExtender(
 );
 
     always@(*)begin
-        imm32 = {16{imm[15]}, imm};
+        imm32 = {{16{imm[15]}}, imm};
     end
 
 endmodule

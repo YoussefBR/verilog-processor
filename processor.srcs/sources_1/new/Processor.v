@@ -72,7 +72,7 @@ module IDEXEPipeReg(
     output reg [4:0] edest_reg,
     output reg [31:0] eqa,
     output reg [31:0] eqb,
-    output reg [31:0] eimm32,
+    output reg [31:0] eimm32
 );
 
     always@(posedge clk)begin
