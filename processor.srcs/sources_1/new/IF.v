@@ -26,6 +26,9 @@ module IF(
     output reg [31:0] nextIns
 );
 
+    PCAdder pcAdd(.pc(pc), .nextPc(nextPc));
+    InstructionMemory insMem(.pc(pc), .nextIns(nextIns));
+
 endmodule
 
 // Combinatial - Calculates the address of the next instruction 
