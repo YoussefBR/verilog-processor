@@ -21,33 +21,22 @@
 
 
 module IF(
-    
+    input [31:0] pc,
+    output reg [31:0] nextPc,
+    output reg [31:0] nextIns
 );
-endmodule
-
-// Sequential - Updates the pc at the start of every new cycle
-module ProgramCounter(
-    input [31:0] nextPC,
-    input clk,
-    output reg [31:0] pc
-);
-
-    always@(posedge clk)begin
-        pc <= nextPC;
-    end
 
 endmodule
 
 // Combinatial - Calculates the address of the next instruction 
 module PCAdder(
-    input [31:0] PC,
-    output reg [31:0] nextPC
+    input [31:0] pc,
+    output reg [31:0] nextPc
 );
 
     wire [31:0] WORD_SIZE = 32'd4;
-    
     always@(*)begin
-        nextPC = PC + WORD_SIZE;
+        nextPc = pc + WORD_SIZE;
     end
 
 endmodule
