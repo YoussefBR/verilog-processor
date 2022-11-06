@@ -49,7 +49,7 @@ module ID(
     wire [15:0] imm = insToDecode[15:0];
     
     ControlUnit ctrl(.op(op), .func(func), .wr_reg(wr_reg), .mem_to_reg(mem_to_reg), .wr_mem(wr_mem), .alu_op(alu_op), .alu_imm(alu_imm), .dest_rt(dest_rt));
-    DestMult dMult(.rt(rt), .rd(rd), .dest_rt(.dest_rt), .dest_reg(dest_reg));
+    DestMult dMult(.rt(rt), .rd(rd), .dest_rt(dest_rt), .dest_reg(dest_reg));
     RegisterFile regFile(.rs(rs), .rt(rt), .qa(qa), .qb(qb));
     ImmediateExtender immExt(.imm(imm), .imm32(imm32));
 
@@ -61,7 +61,7 @@ module ControlUnit(
 
     output reg wr_reg,
     output reg mem_to_reg,
-    output reg wr_me,
+    output reg wr_mem,
     output reg [3:0] alu_op,
     output reg alu_imm,
     output reg dest_rt
