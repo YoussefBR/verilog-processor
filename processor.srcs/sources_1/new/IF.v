@@ -22,8 +22,8 @@
 
 module IF(
     input [31:0] pc,
-    output reg [31:0] nextPc,
-    output reg [31:0] nextIns
+    output [31:0] nextPc,
+    output [31:0] nextIns
 );
 
     PCAdder pcAdd(.pc(pc), .nextPc(nextPc));
@@ -31,13 +31,17 @@ module IF(
 
 endmodule
 
-// Combinatial - Calculates the address of the next instruction 
+// Combinational - Calculates the address of the next instruction 
 module PCAdder(
     input [31:0] pc,
     output reg [31:0] nextPc
 );
 
     wire [31:0] WORD_SIZE = 32'd4;
+    initial begin
+        // Initial pc is set to 100 as it is byte addressed and we want the 25th word
+        #1 nextPc = 32'd100;
+    end
     always@(*)begin
         nextPc = pc + WORD_SIZE;
     end
@@ -50,15 +54,18 @@ module InstructionMemory(
     output reg [31:0] nextIns
 );
 
-    reg [31:0] memory [0:63];
+    reg [31:0] ins_memory [0:63];
     
     initial begin
-        memory[25] = {6'b000000, 5'b00000, 5'b00000, 5'b00000, 5'b00000, 6'b000000};
-        memory[26] = {6'b000000, 5'b00000, 5'b00000, 5'b00000, 5'b00000, 6'b000000};
+        // lw $v0 0[$at]
+        ins_memory[25] = {6'b100011, 5'b00001, 5'b00010, 5'b00000, 5'b00000, 6'b000000};
+        // lw $v1 4[$at]
+        ins_memory[26] = {6'b100011, 5'b00001, 5'b00011, 5'b00000, 5'b00000, 6'b000100};
     end
     
     always@(*)begin
-        nextIns = memory[pc[31:2]];
+        // Chop off the last two bits of pc because pc is byte addressed and instruction memory is word addressed
+        nextIns = ins_memory[pc[31:2]];
     end
 
 endmodule

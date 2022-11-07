@@ -26,18 +26,18 @@ module ID(
     input [4:0] wb_dest,
     input [31:0] wb_result,
 
-    output reg wr_reg,
-    output reg mem_to_reg,
-    output reg wr_mem,
-    output reg alu_op,
-    output reg alu_imm,
-    output reg [4:0] dest_reg,
-    output reg [31:0] qa,
-    output reg [31:0] qb,
-    output reg [31:0] imm32
+    output wr_reg,
+    output mem_to_reg,
+    output wr_mem,
+    output alu_imm,
+    output [3:0] alu_op,
+    output [4:0] dest_reg,
+    output [31:0] qa,
+    output [31:0] qb,
+    output [31:0] imm32
 );
     // Only used internally
-    reg dest_rt;
+    wire dest_rt;
 
     // Wires to aid in legibility and clarity
     wire [5:0] op = insToDecode[31:26];
@@ -50,11 +50,12 @@ module ID(
     
     ControlUnit ctrl(.op(op), .func(func), .wr_reg(wr_reg), .mem_to_reg(mem_to_reg), .wr_mem(wr_mem), .alu_op(alu_op), .alu_imm(alu_imm), .dest_rt(dest_rt));
     DestMult dMult(.rt(rt), .rd(rd), .dest_rt(dest_rt), .dest_reg(dest_reg));
-    RegisterFile regFile(.rs(rs), .rt(rt), .qa(qa), .qb(qb));
+    RegisterFile regFile(.rs(rs), .rt(rt), .wb_reg(wb_reg), .wb_dest(wb_dest), .wb_result(wb_result), .qa(qa), .qb(qb));
     ImmediateExtender immExt(.imm(imm), .imm32(imm32));
 
 endmodule
 
+// Combinational - Calculates the control signals for the given instruction
 module ControlUnit(
     input [5:0] op,
     input [5:0] func,
@@ -99,25 +100,27 @@ module ControlUnit(
 
 endmodule
 
+// Combinational - returns the proper destination register based on instruction type
 module DestMult(
     input [4:0] rd,
     input [4:0] rt,
     input dest_rt,
 
-    output reg [4:0] destReg
+    output reg [4:0] dest_reg
 );
 
     always@(*)begin
         if(dest_rt)begin
-            destReg = rt;
+            dest_reg = rt;
         end
         else begin
-            destReg = rd;
+            dest_reg = rd;
         end
     end
 
 endmodule
 
+// Combinational - Stores the register file and returns the corresponding value at the registers used in the instruction
 module RegisterFile(
     input [4:0] rs,
     input [4:0] rt,
@@ -146,6 +149,7 @@ module RegisterFile(
 
 endmodule
 
+// Combinational - Sign extends the immediate from 16 bits to 32 bits so it can be used properly
 module ImmediateExtender(
     input [15:0] imm,
 

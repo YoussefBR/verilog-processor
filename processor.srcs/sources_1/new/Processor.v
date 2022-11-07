@@ -20,7 +20,17 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module Processor(
-    input clk
+    input clk,
+    
+    output [31:0] out_insToDecode,
+    output out_wr_reg,
+    output out_mem_to_reg,
+    output out_wr_mem,
+    output [3:0] out_alu_op,
+    output [4:0] out_dest_reg,
+    output [31:0] out_qa,
+    output [31:0] out_qb,
+    output [31:0] out_imm32
 );
 
     // PC init
@@ -33,6 +43,7 @@ module Processor(
         // Outputs
         .pc     ( pc     )
     );
+    
     // IF init
     wire [31:0] IF_pc = pc;
     wire [31:0] IF_nextPc;
@@ -62,13 +73,13 @@ module Processor(
     wire wr_reg;
     wire mem_to_reg;
     wire wr_mem;
-    wire alu_op;
     wire alu_imm;
+    wire [3:0] alu_op;
     wire [4:0] dest_reg;
     wire [31:0] qa;
     wire [31:0] qb;
     wire [31:0] imm32;
-
+   
     wire wb_reg;
     wire [4:0] wb_dest;
     wire [31:0] wb_result;
@@ -90,12 +101,13 @@ module Processor(
         .qb             ( qb            ),
         .imm32          ( imm32         )
     );
+    
     // IDEXEPipeReg init
     wire ewr_reg;
     wire emem_to_reg;
     wire ewr_mem;
-    wire ealu_op;
     wire ealu_imm;
+    wire [3:0] ealu_op;
     wire [4:0] edest_reg;
     wire [31:0] eqa;
     wire [31:0] eqb;
@@ -157,7 +169,8 @@ module Processor(
     reg [31:0] result;
     always@(*)begin
         if(mem_to_reg)begin
-            result = data_memory[aluResult];
+            // We chop off the last two bits bc data memory is word addressed and aluResult is byte addressed
+            result = data_memory[aluResult[31:2]];
         end
         else begin
             result = aluResult;
@@ -173,8 +186,18 @@ module Processor(
         // Outputss
         .wb_reg     ( wb_reg    ),
         .wb_dest    ( wb_dest   ),
-        .wb_result  ( wb_dest   )
+        .wb_result  ( wb_result )
     );
+    
+    assign out_insToDecode = insToDecode;
+    assign out_wr_reg = ewr_reg;
+    assign out_mem_to_reg = emem_to_reg;
+    assign out_wr_mem = ewr_mem;
+    assign out_alu_op = ealu_op;
+    assign out_dest_reg = edest_reg;
+    assign out_qa = eqa;
+    assign out_qb = eqb;
+    assign out_imm32 = eimm32;
 
 endmodule
 
@@ -191,7 +214,7 @@ module Program_Counter(
 
 endmodule
 
-// Sequential - Stores values needed when transitioning an instruction from IF to ID and updates at the start of each cycle
+// Sequential - Stores and passes necessary values from IF to ID at the start of each cycle
 module IF_ID_PipeReg(
     input [31:0] nextIns,
     input clk,
@@ -205,6 +228,7 @@ module IF_ID_PipeReg(
 
 endmodule
 
+// Sequential - Stores and passes necessary values from ID to EXE at the start of each cycle
 module ID_EXE_PipeReg(
     input clk,
     input wr_reg,
@@ -242,6 +266,7 @@ module ID_EXE_PipeReg(
 
 endmodule
 
+// Sequential - Stores and passes necessary values from MEM to WB and updates at the start of each cycle (unfinished & makeshift)
 module MEM_WB_PipeReg(
     input clk,
     input wr_reg,
@@ -253,9 +278,9 @@ module MEM_WB_PipeReg(
     output reg [31:0] wb_result
 );
     // Temporarily set to when result changes even though this should be on clk just to give mem enough time to finish.
-    always@(result)begin
+    always@(*)begin
         if(wr_reg)begin
-            wb_reg <= wb_reg;
+            wb_reg <= wr_reg;
             wb_dest <= dest_reg;
             wb_result <= result;
         end

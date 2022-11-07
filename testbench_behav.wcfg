@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="testbench_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="testbench" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="10.001 ns"></ZoomEndTime>
+      <Cursor1Time time="10.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="116"></NameColumnWidth>
+      <ValueColumnWidth column_width="58"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="26" />
+   <wvobject fp_name="/testbench/clk" type="logic">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/proccessor/insFetch/pc" type="array">
+      <obj_property name="ElementShortName">pc[31:0]</obj_property>
+      <obj_property name="ObjectShortName">pc[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/proccessor/insDecode/regFile/registers[0]" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">[0][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[0][31:0]</obj_property>
+      <obj_property name="label">reg[0][31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/proccessor/insDecode/regFile/registers[1]" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">[1][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[1][31:0]</obj_property>
+      <obj_property name="label">reg[1][31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/proccessor/insDecode/regFile/registers[2]" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">[2][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[2][31:0]</obj_property>
+      <obj_property name="label">reg[2][31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/proccessor/insDecode/regFile/registers[3]" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">[3][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[3][31:0]</obj_property>
+      <obj_property name="label">reg[3][31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/proccessor/IF_ID_Pipe/nextIns" type="array">
+      <obj_property name="ElementShortName">nextIns[31:0]</obj_property>
+      <obj_property name="ObjectShortName">nextIns[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/proccessor/IF_ID_Pipe/insToDecode" type="array">
+      <obj_property name="ElementShortName">insToDecode[31:0]</obj_property>
+      <obj_property name="ObjectShortName">insToDecode[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/proccessor/ID_EXE_Pipe/wr_reg" type="logic">
+      <obj_property name="ElementShortName">wr_reg</obj_property>
+      <obj_property name="ObjectShortName">wr_reg</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/proccessor/ID_EXE_Pipe/mem_to_reg" type="logic">
+      <obj_property name="ElementShortName">mem_to_reg</obj_property>
+      <obj_property name="ObjectShortName">mem_to_reg</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/proccessor/ID_EXE_Pipe/wr_mem" type="logic">
+      <obj_property name="ElementShortName">wr_mem</obj_property>
+      <obj_property name="ObjectShortName">wr_mem</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/proccessor/ID_EXE_Pipe/alu_imm" type="logic">
+      <obj_property name="ElementShortName">alu_imm</obj_property>
+      <obj_property name="ObjectShortName">alu_imm</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/proccessor/ID_EXE_Pipe/alu_op" type="array">
+      <obj_property name="ElementShortName">alu_op[3:0]</obj_property>
+      <obj_property name="ObjectShortName">alu_op[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/proccessor/ID_EXE_Pipe/dest_reg" type="array">
+      <obj_property name="ElementShortName">dest_reg[4:0]</obj_property>
+      <obj_property name="ObjectShortName">dest_reg[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/proccessor/ID_EXE_Pipe/qa" type="array">
+      <obj_property name="ElementShortName">qa[31:0]</obj_property>
+      <obj_property name="ObjectShortName">qa[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/proccessor/ID_EXE_Pipe/qb" type="array">
+      <obj_property name="ElementShortName">qb[31:0]</obj_property>
+      <obj_property name="ObjectShortName">qb[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/proccessor/ID_EXE_Pipe/imm32" type="array">
+      <obj_property name="ElementShortName">imm32[31:0]</obj_property>
+      <obj_property name="ObjectShortName">imm32[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/proccessor/ID_EXE_Pipe/ewr_reg" type="logic">
+      <obj_property name="ElementShortName">ewr_reg</obj_property>
+      <obj_property name="ObjectShortName">ewr_reg</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/proccessor/ID_EXE_Pipe/emem_to_reg" type="logic">
+      <obj_property name="ElementShortName">emem_to_reg</obj_property>
+      <obj_property name="ObjectShortName">emem_to_reg</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/proccessor/ID_EXE_Pipe/ewr_mem" type="logic">
+      <obj_property name="ElementShortName">ewr_mem</obj_property>
+      <obj_property name="ObjectShortName">ewr_mem</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/proccessor/ID_EXE_Pipe/ealu_imm" type="logic">
+      <obj_property name="ElementShortName">ealu_imm</obj_property>
+      <obj_property name="ObjectShortName">ealu_imm</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/proccessor/ID_EXE_Pipe/ealu_op" type="array">
+      <obj_property name="ElementShortName">ealu_op[3:0]</obj_property>
+      <obj_property name="ObjectShortName">ealu_op[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/proccessor/ID_EXE_Pipe/edest_reg" type="array">
+      <obj_property name="ElementShortName">edest_reg[4:0]</obj_property>
+      <obj_property name="ObjectShortName">edest_reg[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/proccessor/ID_EXE_Pipe/eqa" type="array">
+      <obj_property name="ElementShortName">eqa[31:0]</obj_property>
+      <obj_property name="ObjectShortName">eqa[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/proccessor/ID_EXE_Pipe/eqb" type="array">
+      <obj_property name="ElementShortName">eqb[31:0]</obj_property>
+      <obj_property name="ObjectShortName">eqb[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/proccessor/ID_EXE_Pipe/eimm32" type="array">
+      <obj_property name="ElementShortName">eimm32[31:0]</obj_property>
+      <obj_property name="ObjectShortName">eimm32[31:0]</obj_property>
+   </wvobject>
+</wave_config>
