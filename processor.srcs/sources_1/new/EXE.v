@@ -24,3 +24,22 @@ module EXE(
 
     );
 endmodule
+
+module ALU_In_Mux(
+    input               ealu_imm,
+    input       [31:0]  eqb,
+    input       [31:0]  eimm32,
+    
+    output reg  [31:0]  b
+);
+
+    always@(*)begin
+        if(ealu_imm)begin
+            b = eimm32;
+        end
+        else begin
+            b = eqb;
+        end
+    end
+
+endmodule
