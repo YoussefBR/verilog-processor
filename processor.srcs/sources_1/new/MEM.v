@@ -21,11 +21,11 @@
 
 
 module MEM(
-        input wr_mem;
-        input [31:0] alu_out;
-        input [31:0] qb
+        input wr_mem,
+        input [31:0] alu_out,
+        input [31:0] qb,
 
-        output [31:0] mem_out;
+        output [31:0] mem_out
     );
 
     DataMemory dataMem(.wr_mem(wr_mem), .mem_loc(alu_out), .qb(qb), .mem_out(mem_out));

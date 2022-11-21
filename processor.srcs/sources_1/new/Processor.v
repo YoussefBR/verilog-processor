@@ -24,21 +24,21 @@ module Processor(
     
     output [31:0] out_insToDecode,
     //
-    output out_wr_reg,
-    output out_mem_to_reg,
-    output out_wr_mem,
-    output [3:0] out_alu_op,
-    output [4:0] out_dest_reg,
-    output [31:0] out_qa,
-    output [31:0] out_qb,
-    output [31:0] out_imm32,
+    output out_ewr_reg,
+    output out_emem_to_reg,
+    output out_ewr_mem,
+    output [3:0] out_ealu_op,
+    output [4:0] out_edest_reg,
+    output [31:0] out_eqa,
+    output [31:0] out_eqb,
+    output [31:0] out_eimm32,
     //
     output out_mwr_reg,
     output out_mmem_to_reg,
     output out_mwr_mem,
     output [4:0] out_mdest_reg,
     output [31:0] out_mqb,
-    output [31:0] out_malu_out
+    output [31:0] out_malu_out,
     //
     output out_wb_reg,
     output [4:0] out_wb_dest,
@@ -212,9 +212,9 @@ module Processor(
     MEM_WB_PipeReg MEM_WB_Pipe(
         // Inputs
         .clk        ( clk         ),
-        .wr_reg     ( ewr_reg     ),
+        .wr_reg     ( mwr_reg     ),
         .mem_to_reg ( mmem_to_reg ),
-        .dest_reg   ( edest_reg   ),
+        .dest_reg   ( mdest_reg   ),
         .alu_out    ( malu_out    ),
         .mem_out    ( mem_out     ),
 
@@ -223,7 +223,7 @@ module Processor(
         .wb_mem_to_reg ( wb_mem_to_reg ),
         .wb_dest    ( wb_dest   ),
         .wb_alu_out  ( wb_alu_out ),
-        .wb_mem_out (wb_mem_out),
+        .wb_mem_out (wb_mem_out)
     );
 
     // Init WB
@@ -344,7 +344,7 @@ module EXE_MEM_PipeReg(
     output reg mwr_mem,
     output reg [4:0] mdest_reg,
     output reg [31:0] malu_out,
-    output reg [31:0] mqb,
+    output reg [31:0] mqb
 );
 
     always@(posedge clk)begin
@@ -352,7 +352,7 @@ module EXE_MEM_PipeReg(
         mmem_to_reg <= emem_to_reg;
         mwr_mem <= ewr_mem;
         mdest_reg <= edest_reg;
-        malu_out <= ealu_out;
+        malu_out <= alu_out;
         mqb <= eqb;
     end
 
