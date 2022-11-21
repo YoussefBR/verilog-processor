@@ -23,6 +23,7 @@ module Processor(
     input clk,
     
     output [31:0] out_insToDecode,
+    //
     output out_wr_reg,
     output out_mem_to_reg,
     output out_wr_mem,
@@ -30,7 +31,18 @@ module Processor(
     output [4:0] out_dest_reg,
     output [31:0] out_qa,
     output [31:0] out_qb,
-    output [31:0] out_imm32
+    output [31:0] out_imm32,
+    //
+    output out_mwr_reg,
+    output out_mmem_to_reg,
+    output out_mwr_mem,
+    output [4:0] out_mdest_reg,
+    output [31:0] out_mqb,
+    output [31:0] out_malu_out
+    //
+    output out_wb_reg,
+    output [4:0] out_wb_dest,
+    output [31:0] out_wb_result
 );
 
     // PC init
@@ -137,39 +149,118 @@ module Processor(
         .eimm32         ( eimm32      )
     );
 
-    // Makeshift WB until implemented, should be the memory versions of these vars not the exe versions.
-    reg [31:0] result;
-    always@(*)begin
-        if(mem_to_reg)begin
-            // We chop off the last two bits bc data memory is word addressed and aluResult is byte addressed
-            result = data_memory[aluResult[31:2]];
-        end
-        else begin
-            result = aluResult;
-        end
-    end
+    // EXE init
+    wire [31:0] alu_out;
+
+    EXE execute(
+        // Inputs
+        .alu_imm(ealu_imm),
+        .alu_op(ealu_op),
+        .qa(eqa),
+        .qb(eqb),
+        .imm32(eimm32),
+
+        // Outputs
+        .alu_out(alu_out)
+    );
+
+    // Init EXE_MEM_Pipe
+    wire mwr_reg;
+    wire mmem_to_reg;
+    wire mwr_mem;
+    wire [4:0] mdest_reg;
+    wire [31:0] mqb;
+    wire [31:0] malu_out;
+
+    EXE_MEM_PipeReg EXE_MEM_Pipe(
+        // Inputs
+        .clk(clk),
+        .ewr_reg(ewr_reg),
+        .emem_to_reg(emem_to_reg),
+        .ewr_mem(ewr_mem),
+        .edest_reg(edest_reg),
+        .eqb(eqb),
+        .alu_out(alu_out),
+
+        // Outputs
+        .mwr_reg(mwr_reg),
+        .mmem_to_reg(mmem_to_reg),
+        .mwr_mem(mwr_mem),
+        .mdest_reg(mdest_reg),
+        .mqb(mqb),
+        .malu_out(malu_out)
+    );
+
+    // Init MEM
+    wire [31:0] mem_out;
+
+    MEM memory(
+        // Inputs
+        .wr_mem(mwr_mem),
+        .alu_out(malu_out),
+        .qb(mqb),
+
+        // Outputs
+        .mem_out(mem_out)
+    );
+
+    // Init MEM_WB_Pipe
+    wire wb_mem_to_reg;
+    wire [31:0] wb_alu_out;
+    wire [31:0] wb_mem_out;
 
     MEM_WB_PipeReg MEM_WB_Pipe(
         // Inputs
-        .clk        ( clk       ),
-        .wr_reg     ( ewr_reg   ),
-        .dest_reg   ( edest_reg ),
-        .result     ( result    ),
-        // Outputss
+        .clk        ( clk         ),
+        .wr_reg     ( ewr_reg     ),
+        .mem_to_reg ( mmem_to_reg ),
+        .dest_reg   ( edest_reg   ),
+        .alu_out    ( malu_out    ),
+        .mem_out    ( mem_out     ),
+
+        // Outputs
         .wb_reg     ( wb_reg    ),
+        .wb_mem_to_reg ( wb_mem_to_reg ),
         .wb_dest    ( wb_dest   ),
-        .wb_result  ( wb_result )
+        .wb_alu_out  ( wb_alu_out ),
+        .wb_mem_out (wb_mem_out),
+    );
+
+    // Init WB
+
+
+    WB writeBack(
+        // Inputs
+        .mem_to_reg(wb_mem_to_reg),
+        .alu_out(wb_alu_out),
+        .mem_out(wb_mem_out),
+
+        // Outputs 
+        .result(wb_result)
     );
     
+    // IF_ID
     assign out_insToDecode = insToDecode;
-    assign out_wr_reg = ewr_reg;
-    assign out_mem_to_reg = emem_to_reg;
-    assign out_wr_mem = ewr_mem;
-    assign out_alu_op = ealu_op;
-    assign out_dest_reg = edest_reg;
-    assign out_qa = eqa;
-    assign out_qb = eqb;
-    assign out_imm32 = eimm32;
+    // ID_EXE
+    assign out_ewr_reg = ewr_reg;
+    assign out_emem_to_reg = emem_to_reg;
+    assign out_ewr_mem = ewr_mem;
+    assign out_ealu_op = ealu_op;
+    assign out_edest_reg = edest_reg;
+    assign out_eqa = eqa;
+    assign out_eqb = eqb;
+    assign out_eimm32 = eimm32;
+    // EXE_MEM
+    assign out_mwr_reg = mwr_reg;
+    assign out_mmem_to_reg = mmem_to_reg;
+    assign out_mwr_mem = mwr_mem;
+    assign out_mdest_reg = mdest_reg;
+    assign out_mqb = mqb;
+    assign out_malu_out = malu_out;
+    // MEM_WB
+    assign out_wb_reg = wb_reg;
+    assign out_wb_dest = wb_dest;
+    assign out_wb_result = wb_result;
 
 endmodule
 
@@ -238,24 +329,56 @@ module ID_EXE_PipeReg(
 
 endmodule
 
-// Sequential - Stores and passes necessary values from MEM to WB and updates at the start of each cycle (unfinished & makeshift)
+// Sequential - Stores and passes necessary values from EXE to MEM and updates at the start of each cycle
+module EXE_MEM_PipeReg(
+    input clk,
+    input ewr_reg,
+    input emem_to_reg,
+    input ewr_mem,
+    input [4:0] edest_reg,
+    input [31:0] alu_out,
+    input [31:0] eqb,
+
+    output reg mwr_reg,
+    output reg mmem_to_reg,
+    output reg mwr_mem,
+    output reg [4:0] mdest_reg,
+    output reg [31:0] malu_out,
+    output reg [31:0] mqb,
+);
+
+    always@(posedge clk)begin
+        mwr_reg <= ewr_reg;
+        mmem_to_reg <= emem_to_reg;
+        mwr_mem <= ewr_mem;
+        mdest_reg <= edest_reg;
+        malu_out <= ealu_out;
+        mqb <= eqb;
+    end
+
+endmodule
+
+// Sequential - Stores and passes necessary values from MEM to WB and updates at the start of each cycle
 module MEM_WB_PipeReg(
     input clk,
     input wr_reg,
+    input mem_to_reg,
     input [4:0] dest_reg,
-    input [31:0] result,
+    input [31:0] alu_out,
+    input [31:0] mem_out,
 
     output reg wb_reg,
+    output reg wb_mem_to_reg,
     output reg [4:0] wb_dest,
-    output reg [31:0] wb_result
+    output reg [31:0] wb_alu_out,
+    output reg [31:0] wb_mem_out
 );
-    // Temporarily set to when result changes even though this should be on clk just to give mem enough time to finish.
-    always@(*)begin
-        if(wr_reg)begin
-            wb_reg <= wr_reg;
-            wb_dest <= dest_reg;
-            wb_result <= result;
-        end
+    always@(posedge clk)begin
+        wb_reg <= wr_reg;
+        wb_mem_to_reg <= mem_to_reg;
+        wb_dest <= dest_reg;
+        wb_alu_out <= alu_out;
+        wb_mem_out <= mem_out;
     end
 
 endmodule

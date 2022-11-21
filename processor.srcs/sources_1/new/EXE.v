@@ -21,7 +21,35 @@
 
 
 module EXE(
+    input alu_imm,
+    input [3:0] alu_op,
+    input [31:0] qa,
+    input [31:0] qb,
+    input [31:0] imm32,
 
+    output [31:0] alu_out
+);
+
+    wire [31:0] b;
+
+    ALU_In_Mux alu_mux(
+        // Inputs
+        .alu_imm(alu_imm),
+        .qb(qb),
+        .imm32(imm32),
+
+        // Outputs
+        .b(b)
+    );
+
+    ALU alu(
+        // Inputs
+        .alu_op(alu_op),
+        .qa(qa),
+        .b(b),
+
+        // Outputs
+        .alu_out(alu_out)
     );
 endmodule
 

@@ -21,6 +21,19 @@
 
 
 module WB(
+    input mem_to_reg,
+    input [31:0] alu_out,
+    input [31:0] mem_out,
     
+    output reg [31:0] result
 );
+
+    always@(*)begin
+        if(mem_to_reg)begin
+            result <= mem_out;
+        end
+        else begin
+            result <= alu_out;
+        end
+    end
 endmodule
