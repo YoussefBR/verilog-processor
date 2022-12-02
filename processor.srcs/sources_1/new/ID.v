@@ -21,10 +21,11 @@
 
 
 module ID(
-    input [31:0] insToDecode,
+    input clk,
     input wb_reg,
     input [4:0] wb_dest,
-    input [31:0] wb_result,
+    input [31:0] insToDecode,
+    input [31:0] wb_data,
 
     output wr_reg,
     output mem_to_reg,
@@ -50,7 +51,7 @@ module ID(
     
     ControlUnit ctrl(.op(op), .func(func), .wr_reg(wr_reg), .mem_to_reg(mem_to_reg), .wr_mem(wr_mem), .alu_op(alu_op), .alu_imm(alu_imm), .dest_rt(dest_rt));
     DestMult dMult(.rt(rt), .rd(rd), .dest_rt(dest_rt), .dest_reg(dest_reg));
-    RegisterFile regFile(.rs(rs), .rt(rt), .wb_reg(wb_reg), .wb_dest(wb_dest), .wb_result(wb_result), .qa(qa), .qb(qb));
+    RegisterFile regFile(.clk(clk), .rs(rs), .rt(rt), .wb_reg(wb_reg), .wb_dest(wb_dest), .wb_data(wb_data), .qa(qa), .qb(qb));
     ImmediateExtender immExt(.imm(imm), .imm32(imm32));
 
 endmodule
@@ -122,11 +123,12 @@ endmodule
 
 // Combinational - Stores the register file and returns the corresponding value at the registers used in the instruction
 module RegisterFile(
+    input clk,
+    input wb_reg,
     input [4:0] rs,
     input [4:0] rt,
-    input wb_reg,
     input [4:0] wb_dest,
-    input [31:0] wb_result,
+    input [31:0] wb_data,
 
     output reg [31:0] qa,
     output reg [31:0] qb
@@ -140,11 +142,14 @@ module RegisterFile(
     end
 
     always@(*)begin
-        if(wb_reg)begin
-            registers[wb_dest] = wb_result;
-        end
         qa <= registers[rs];
         qb <= registers[rt];
+    end
+    
+    always@(negedge clk)begin
+        if(wb_reg)begin
+            registers[wb_dest] = wb_data;
+        end
     end
 
 endmodule

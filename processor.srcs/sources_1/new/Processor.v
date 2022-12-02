@@ -42,7 +42,7 @@ module Processor(
     //
     output out_wb_reg,
     output [4:0] out_wb_dest,
-    output [31:0] out_wb_result
+    output [31:0] out_wb_data
 );
 
     // PC init
@@ -94,14 +94,14 @@ module Processor(
    
     wire wb_reg;
     wire [4:0] wb_dest;
-    wire [31:0] wb_result;
+    wire [31:0] wb_data;
 
     ID insDecode(
         // Inputs
         .insToDecode    ( insToDecode   ),
         .wb_reg         ( wb_reg        ),
         .wb_dest        ( wb_dest       ),
-        .wb_result      ( wb_result     ),
+        .wb_data      ( wb_data     ),
         // Outputs
         .wr_reg         ( wr_reg        ),
         .mem_to_reg     ( mem_to_reg    ),
@@ -236,7 +236,7 @@ module Processor(
         .mem_out(wb_mem_out),
 
         // Outputs 
-        .result(wb_result)
+        .wb_data(wb_data)
     );
     
     // IF_ID
@@ -260,7 +260,7 @@ module Processor(
     // MEM_WB
     assign out_wb_reg = wb_reg;
     assign out_wb_dest = wb_dest;
-    assign out_wb_result = wb_result;
+    assign out_wb_data = wb_data;
 
 endmodule
 
