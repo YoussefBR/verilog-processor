@@ -21,6 +21,7 @@
 
 
 module MEM(
+        input clk,
         input wr_mem,
         input [31:0] alu_out,
         input [31:0] qb,
@@ -28,7 +29,7 @@ module MEM(
         output [31:0] mem_out
     );
 
-    DataMemory dataMem(.wr_mem(wr_mem), .mem_loc(alu_out), .qb(qb), .mem_out(mem_out));
+    DataMemory dataMem(.clk(clk), .wr_mem(wr_mem), .mem_loc(alu_out), .qb(qb), .mem_out(mem_out));
 
 endmodule
 

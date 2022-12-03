@@ -198,6 +198,7 @@ module Processor(
 
     MEM memory(
         // Inputs
+        .clk(clk),
         .wr_mem(mwr_mem),
         .alu_out(malu_out),
         .qb(mqb),

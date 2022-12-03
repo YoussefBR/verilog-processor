@@ -84,6 +84,76 @@ module ControlUnit(
                         alu_imm <= 1'b0;
                         dest_rt <= 1'b0;
                     end
+                    // Subtract signals 
+                    6'b100010:
+                    begin
+                        wr_reg <= 1'b1;
+                        mem_to_reg <= 1'b0;
+                        wr_mem <= 1'b0;
+                        alu_op <= 4'b0110;
+                        alu_imm <= 1'b0;
+                        dest_rt <= 1'b0;
+                    end
+                    // AND signals 
+                    6'b100100:
+                    begin
+                        wr_reg <= 1'b1;
+                        mem_to_reg <= 1'b0;
+                        wr_mem <= 1'b0;
+                        alu_op <= 4'b0000;
+                        alu_imm <= 1'b0;
+                        dest_rt <= 1'b0;
+                    end
+                    // OR signals 
+                    6'b100101:
+                    begin
+                        wr_reg <= 1'b1;
+                        mem_to_reg <= 1'b0;
+                        wr_mem <= 1'b0;
+                        alu_op <= 4'b0001;
+                        alu_imm <= 1'b0;
+                        dest_rt <= 1'b0;
+                    end
+                    // XOR signals 
+                    6'b100110:
+                    begin
+                        wr_reg <= 1'b1;
+                        mem_to_reg <= 1'b0;
+                        wr_mem <= 1'b0;
+                        alu_op <= 4'b1100;
+                        alu_imm <= 1'b0;
+                        dest_rt <= 1'b0;
+                    end
+                    // Shift left signals 
+                    6'b000000:
+                    begin
+                        wr_reg <= 1'b1;
+                        mem_to_reg <= 1'b0;
+                        wr_mem <= 1'b0;
+                        alu_op <= 4'b1000;
+                        alu_imm <= 1'b0;
+                        dest_rt <= 1'b0;
+                    end
+                    // Logic shift right signals 
+                    6'b000010:
+                    begin
+                        wr_reg <= 1'b1;
+                        mem_to_reg <= 1'b0;
+                        wr_mem <= 1'b0;
+                        alu_op <= 4'b1001;
+                        alu_imm <= 1'b0;
+                        dest_rt <= 1'b0;
+                    end
+                    // Arithmetic shift right signals 
+                    6'b000011:
+                    begin
+                        wr_reg <= 1'b1;
+                        mem_to_reg <= 1'b0;
+                        wr_mem <= 1'b0;
+                        alu_op <= 4'b1011;
+                        alu_imm <= 1'b0;
+                        dest_rt <= 1'b0;
+                    end
                 endcase 
             end
             // Load word signals
@@ -91,6 +161,16 @@ module ControlUnit(
             begin
                 wr_reg <= 1'b1;
                 mem_to_reg <= 1'b1;
+                wr_mem <= 1'b0;
+                alu_op <= 4'b0010;
+                alu_imm <= 1'b1;
+                dest_rt <= 1'b1;
+            end
+            // Load upper immediate signals
+            6'b001111:
+            begin
+                wr_reg <= 1'b1;
+                mem_to_reg <= 1'b0;
                 wr_mem <= 1'b0;
                 alu_op <= 4'b0010;
                 alu_imm <= 1'b1;

@@ -45,6 +45,7 @@ module EXE(
     ALU alu(
         // Inputs
         .alu_op(alu_op),
+        .sham(imm32[10:6]),
         .qa(qa),
         .b(b),
 
@@ -74,6 +75,7 @@ endmodule
 
 module ALU(
     input [3:0] alu_op,
+    input [4:0] sham,
     input [31:0] qa,
     input [31:0] b,
 
@@ -85,6 +87,34 @@ module ALU(
             4'b0010:
             begin
                 alu_out = qa + b;
+            end
+            4'b0110:
+            begin
+                alu_out = qa - b;
+            end
+            4'b0000:
+            begin
+                alu_out = qa & b;
+            end
+            4'b0001:
+            begin
+                alu_out = qa | b;
+            end
+            4'b1100:
+            begin
+                alu_out = qa ^ b;
+            end
+            4'b1000:
+            begin
+                alu_out = b << sham;
+            end
+            4'b1001:
+            begin
+                alu_out = b >> sham;
+            end
+            4'b1011:
+            begin
+                alu_out = b >>> sham;
             end
         endcase
     end
