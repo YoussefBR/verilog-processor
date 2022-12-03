@@ -1,0 +1,13 @@
+#-----------------------------------------------------------
+# Vivado v2022.1 (64-bit)
+# SW Build 3526262 on Mon Apr 18 15:48:16 MDT 2022
+# IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
+# Start of session at: Fri Dec  2 19:53:43 2022
+# Process ID: 4588
+# Current directory: C:/Users/yzb5142/Desktop/verilog_processor/verilog_processor.runs/synth_1
+# Command line: vivado.exe -log Processor.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source Processor.tcl
+# Log file: C:/Users/yzb5142/Desktop/verilog_processor/verilog_processor.runs/synth_1/Processor.vds
+# Journal file: C:/Users/yzb5142/Desktop/verilog_processor/verilog_processor.runs/synth_1\vivado.jou
+# Running On: E5-CSE-136-23, OS: Windows, CPU Frequency: 2904 MHz, CPU Physical cores: 8, Host memory: 16888 MB
+#-----------------------------------------------------------
+source Processor.tcl -notrace
