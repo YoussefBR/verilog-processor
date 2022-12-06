@@ -114,7 +114,7 @@ module ALU(
             end
             4'b1011:
             begin
-                alu_out = b >>> sham;
+                alu_out = $signed(b) >>> sham;
             end
         endcase
     end

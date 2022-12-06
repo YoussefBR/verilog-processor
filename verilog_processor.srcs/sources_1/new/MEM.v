@@ -42,27 +42,26 @@ module DataMemory(
     output reg [31:0] mem_out
 );
 
-    reg [31:0] data_memory [0:9];
-    initial begin
-        data_memory[0] <= 32'hA00000AA;
-        data_memory[1] <= 32'h10000011;
-        data_memory[2] <= 32'h20000022;
-        data_memory[3] <= 32'h30000033;
-        data_memory[4] <= 32'h40000044;
-        data_memory[5] <= 32'h50000055;
-        data_memory[6] <= 32'h60000066;
-        data_memory[7] <= 32'h70000077;
-        data_memory[8] <= 32'h80000088;
-        data_memory[9] <= 32'h90000099;
+    reg    [31:0] ram [0:31];              // ram cells: 32 words * 32 bits 
+    integer i; 
+    initial begin                          // ram initialization 
+        for (i = 0; i < 32; i = i + 1) 
+            ram[i] = 0; 
+        // ram[word_addr] = data           // (byte_addr) item in data array 
+        ram[5'h14] = 32'h000000a3;         // (50) data[0]   0 +  a3 =  a3 
+        ram[5'h15] = 32'h00000027;         // (54) data[1]  a3 +  27 =  ca 
+        ram[5'h16] = 32'h00000079;         // (58) data[2]  ca +  79 = 143 
+        ram[5'h17] = 32'h00000115;         // (5c) data[3] 143 + 115 = 258 
+        // ram[5'h18] should be 0x00000258, the sum stored by sw instruction 
     end
 
     always@(*)begin
-        mem_out = data_memory[mem_loc[31:2]];
+        mem_out = ram[mem_loc[6:2]]; // 5 bits used to address
     end
-    always@(negedge clk)begin
+    always@(posedge clk)begin
         if(wr_mem)begin
-            data_memory[mem_loc[31:2]] = qb;
-        end
+            ram[mem_loc[6:2]] = qb; // 5 bits used to address
+        end                                                                                                                                                                                                             
     end
 
 endmodule

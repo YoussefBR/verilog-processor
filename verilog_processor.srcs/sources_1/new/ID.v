@@ -166,6 +166,16 @@ module ControlUnit(
                 alu_imm <= 1'b1;
                 dest_rt <= 1'b1;
             end
+            // Store word signals
+            6'b101011:
+            begin
+                wr_reg <= 1'b0;
+                mem_to_reg <= 1'b0;
+                wr_mem <= 1'b1;
+                alu_op <= 4'b0010;
+                alu_imm <= 1'b1;
+                dest_rt <= 1'b0;
+            end
             // Load upper immediate signals
             6'b001111:
             begin
@@ -173,6 +183,46 @@ module ControlUnit(
                 mem_to_reg <= 1'b0;
                 wr_mem <= 1'b0;
                 alu_op <= 4'b0010;
+                alu_imm <= 1'b1;
+                dest_rt <= 1'b1;
+            end
+            // Addi signals
+            6'b001000:
+            begin
+                wr_reg <= 1'b1;
+                mem_to_reg <= 1'b0;
+                wr_mem <= 1'b0;
+                alu_op <= 4'b0010;
+                alu_imm <= 1'b1;
+                dest_rt <= 1'b1;
+            end
+            // Andi signals
+            6'b001100:
+            begin
+                wr_reg <= 1'b1;
+                mem_to_reg <= 1'b0;
+                wr_mem <= 1'b0;
+                alu_op <= 4'b0000;
+                alu_imm <= 1'b1;
+                dest_rt <= 1'b1;
+            end
+            // Ori signals
+            6'b001101:
+            begin
+                wr_reg <= 1'b1;
+                mem_to_reg <= 1'b0;
+                wr_mem <= 1'b0;
+                alu_op <= 4'b0001;
+                alu_imm <= 1'b1;
+                dest_rt <= 1'b1;
+            end
+            // Xori signals
+            6'b001110:
+            begin
+                wr_reg <= 1'b1;
+                mem_to_reg <= 1'b0;
+                wr_mem <= 1'b0;
+                alu_op <= 4'b1100;
                 alu_imm <= 1'b1;
                 dest_rt <= 1'b1;
             end
@@ -219,7 +269,10 @@ module RegisterFile(
     initial begin
         registers[0] = 32'd0;
         registers[1] = 32'd0;
-        registers[10] = 32'd0;
+        registers[2] <= 32'hA00000AA;
+        registers[3] <= 32'h10000011;
+        registers[4] <= 32'h20000022;
+        registers[5] <= 32'h30000033;
     end
 
     always@(*)begin
@@ -227,7 +280,7 @@ module RegisterFile(
         qb <= registers[rt];
     end
     
-    always@(negedge clk)begin
+    always@(posedge clk)begin
         if(wb_reg)begin
             registers[wb_dest] = wb_data;
         end
