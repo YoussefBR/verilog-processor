@@ -39,8 +39,8 @@ module PCAdder(
 
     wire [31:0] WORD_SIZE = 32'd4;
     initial begin
-        // Initial pc is set to 100 as it is byte addressed and we want the 25th word
-        #1 nextPc = 32'd100;
+        // Initial pc is set to 0
+        #1 nextPc = 32'd0;
     end
     always@(*)begin
         nextPc = pc + WORD_SIZE;
