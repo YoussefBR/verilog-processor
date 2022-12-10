@@ -74,7 +74,7 @@ module ControlUnit(
             6'b000000:
             begin
                 case(func)
-                    // Add signals
+                    // add signals
                     6'b100000:
                     begin
                         wr_reg <= 1'b1;
@@ -84,7 +84,7 @@ module ControlUnit(
                         alu_imm <= 1'b0;
                         dest_rt <= 1'b0;
                     end
-                    // Subtract signals 
+                    // sub signals 
                     6'b100010:
                     begin
                         wr_reg <= 1'b1;
@@ -94,7 +94,7 @@ module ControlUnit(
                         alu_imm <= 1'b0;
                         dest_rt <= 1'b0;
                     end
-                    // AND signals 
+                    // and signals 
                     6'b100100:
                     begin
                         wr_reg <= 1'b1;
@@ -104,7 +104,7 @@ module ControlUnit(
                         alu_imm <= 1'b0;
                         dest_rt <= 1'b0;
                     end
-                    // OR signals 
+                    // or signals 
                     6'b100101:
                     begin
                         wr_reg <= 1'b1;
@@ -114,7 +114,7 @@ module ControlUnit(
                         alu_imm <= 1'b0;
                         dest_rt <= 1'b0;
                     end
-                    // XOR signals 
+                    // xor signals 
                     6'b100110:
                     begin
                         wr_reg <= 1'b1;
@@ -124,7 +124,7 @@ module ControlUnit(
                         alu_imm <= 1'b0;
                         dest_rt <= 1'b0;
                     end
-                    // Shift left signals 
+                    // sll signals 
                     6'b000000:
                     begin
                         wr_reg <= 1'b1;
@@ -134,7 +134,7 @@ module ControlUnit(
                         alu_imm <= 1'b0;
                         dest_rt <= 1'b0;
                     end
-                    // Logic shift right signals 
+                    // srl signals 
                     6'b000010:
                     begin
                         wr_reg <= 1'b1;
@@ -144,7 +144,7 @@ module ControlUnit(
                         alu_imm <= 1'b0;
                         dest_rt <= 1'b0;
                     end
-                    // Arithmetic shift right signals 
+                    // sra signals 
                     6'b000011:
                     begin
                         wr_reg <= 1'b1;
@@ -156,7 +156,7 @@ module ControlUnit(
                     end
                 endcase 
             end
-            // Load word signals
+            // lw signals
             6'b100011:
             begin
                 wr_reg <= 1'b1;
@@ -166,7 +166,7 @@ module ControlUnit(
                 alu_imm <= 1'b1;
                 dest_rt <= 1'b1;
             end
-            // Store word signals
+            // sw signals
             6'b101011:
             begin
                 wr_reg <= 1'b0;
@@ -176,7 +176,7 @@ module ControlUnit(
                 alu_imm <= 1'b1;
                 dest_rt <= 1'b0;
             end
-            // Load upper immediate signals
+            // lui signals
             6'b001111:
             begin
                 wr_reg <= 1'b1;
@@ -186,7 +186,7 @@ module ControlUnit(
                 alu_imm <= 1'b1;
                 dest_rt <= 1'b1;
             end
-            // Addi signals
+            // addi signals
             6'b001000:
             begin
                 wr_reg <= 1'b1;
@@ -196,7 +196,7 @@ module ControlUnit(
                 alu_imm <= 1'b1;
                 dest_rt <= 1'b1;
             end
-            // Andi signals
+            // andi signals
             6'b001100:
             begin
                 wr_reg <= 1'b1;
@@ -206,7 +206,7 @@ module ControlUnit(
                 alu_imm <= 1'b1;
                 dest_rt <= 1'b1;
             end
-            // Ori signals
+            // ori signals
             6'b001101:
             begin
                 wr_reg <= 1'b1;
@@ -216,7 +216,7 @@ module ControlUnit(
                 alu_imm <= 1'b1;
                 dest_rt <= 1'b1;
             end
-            // Xori signals
+            // xori signals
             6'b001110:
             begin
                 wr_reg <= 1'b1;
@@ -225,6 +225,56 @@ module ControlUnit(
                 alu_op <= 4'b1100;
                 alu_imm <= 1'b1;
                 dest_rt <= 1'b1;
+            end
+            // j signals
+            6'b000010:
+            begin
+                wr_reg <= 1'b0;
+                mem_to_reg <= 1'bX;
+                wr_mem <= 1'b0;
+                alu_op <= 4'bXXXX;
+                alu_imm <= 1'bX;
+                dest_rt <= 1'bX;
+            end
+            // jr signals
+            6'b000000:
+            begin
+                wr_reg <= 1'b0;
+                mem_to_reg <= 1'bX;
+                wr_mem <= 1'b0;
+                alu_op <= 4'bXXXX;
+                alu_imm <= 1'bX;
+                dest_rt <= 1'bX;
+            end
+            // jal signals
+            6'b000011:
+            begin
+                wr_reg <= 1'b1;
+                mem_to_reg <= 1'bX;
+                wr_mem <= 1'b0;
+                alu_op <= 4'bXXXX;
+                alu_imm <= 1'bX;
+                dest_rt <= 1'bX;
+            end
+            // beq signals
+            6'b000100:
+            begin
+                wr_reg <= 1'b0;
+                mem_to_reg <= 1'bX;
+                wr_mem <= 1'b0;
+                alu_op <= 4'bXXXX;
+                alu_imm <= 1'bX;
+                dest_rt <= 1'bX;
+            end
+            // bne signals
+            6'b000101:
+            begin
+                wr_reg <= 1'b0;
+                mem_to_reg <= 1'bX;
+                wr_mem <= 1'b0;
+                alu_op <= 4'bXXXX;
+                alu_imm <= 1'bX;
+                dest_rt <= 1'bX;
             end
         endcase
     end
