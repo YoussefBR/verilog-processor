@@ -49,11 +49,10 @@ module Processor(
     // PC init
     wire [31:0] nextPc;
     wire [31:0] pc;
-    wire wr_pc = 1'b1;
+    reg wr_pc = 1'b1;
     wire jump;
     wire branch;
     wire jr;
-
     wire [31:0] qa;
     wire [31:0] imm32;
     wire [31:0] jumpAmount;
@@ -168,15 +167,22 @@ module Processor(
 
     // Only stalls in the case of an ins using the information from a previous lw instruction that isn't available yet.
     wire stall = ewr_reg & emem_to_reg & (edest_reg != 0) & (i_rs & (edest_reg == rs) | i_rt & (edest_reg == rt));
-    assign wr_pc = !stall;
+    always@(*)begin
+        if(stall)begin
+            wr_pc = 1'b0;
+        end
+        else begin
+            wr_pc = 1'b1;
+        end
+    end
     // Forwarding signals
     wire forwardA = (edest_reg == rs) & ewr_reg & !emem_to_reg;
     wire forwardB = (edest_reg == rt) & ewr_reg & !emem_to_reg;
     wire wr_exemem;
     wire memForwardA;
     wire memForwardB;
-    wire [31:0] mem_result;
-    wire [31:0] alu_result;
+    reg [31:0] mem_forward;
+    wire [31:0] alu_forward;
     wire [31:0] fwdqa;
     wire [31:0] fwdqb;
 
@@ -186,8 +192,8 @@ module Processor(
         .forwardB   ( forwardB   ),
         .memForwardA( memForwardA),
         .memForwardB( memForwardB),
-        .mem_result ( mem_result ),
-        .alu_result ( alu_result ),
+        .mem_result ( mem_forward ),
+        .alu_result ( alu_forward ),
         .qa         ( qa         ),
         .qb         ( qb         ),
         // Outputs
@@ -245,7 +251,7 @@ module Processor(
         .alu_out(alu_out)
     );
     
-    assign alu_result = alu_out;
+    assign alu_forward = alu_out;
 
     // Init EXE_MEM_Pipe
     wire mwr_reg;
@@ -291,9 +297,17 @@ module Processor(
         .mem_out(mem_out)
     );
 
-    assign mem_result = mem_out;
-    assign memForwardA = mwr_reg & mmem_to_reg & (mdest_reg == rs);
-    assign memForwardB = mwr_reg & mmem_to_reg & (mdest_reg == rt);
+    assign memForwardA = mwr_reg & (mdest_reg == rs);
+    assign memForwardB = mwr_reg & (mdest_reg == rt);
+    
+    always@(*)begin
+        if(mmem_to_reg)begin
+            mem_forward = mem_out;
+        end
+        else begin
+            mem_forward = malu_out;
+        end
+    end
 
     // Init MEM_WB_Pipe
     wire wb_mem_to_reg;
@@ -393,6 +407,7 @@ module IF_ID_PipeReg(
     input clk,
     input wr_ifid,
 
+    output reg wr_idexe,
     output reg [31:0] insToDecode
 );
 
@@ -400,6 +415,7 @@ module IF_ID_PipeReg(
         if(wr_ifid)begin
             insToDecode <= nextIns;
         end
+        wr_idexe <= wr_ifid;
     end
 
 endmodule
@@ -415,7 +431,7 @@ module forwardMux(
     input [31:0] qb,
 
     output reg [31:0] fwdqa,
-    output reg [31:0] fwdqb,
+    output reg [31:0] fwdqb
 );
 
     always@(*)begin
@@ -459,6 +475,7 @@ module ID_EXE_PipeReg(
     output reg emem_to_reg,
     output reg ewr_mem,
     output reg ealu_imm,
+    output reg wr_exemem,
     output reg [3:0] ealu_op,
     output reg [4:0] edest_reg,
     output reg [31:0] eqa,
@@ -497,6 +514,7 @@ module EXE_MEM_PipeReg(
     output reg mwr_reg,
     output reg mmem_to_reg,
     output reg mwr_mem,
+    output reg wr_memwb,
     output reg [4:0] mdest_reg,
     output reg [31:0] malu_out,
     output reg [31:0] mqb
@@ -521,6 +539,7 @@ module MEM_WB_PipeReg(
     input clk,
     input wr_reg,
     input mem_to_reg,
+    input wr_memwb,
     input [4:0] dest_reg,
     input [31:0] alu_out,
     input [31:0] mem_out,
@@ -563,7 +582,7 @@ module BranchMUX(
 endmodule
 
 // Combinational, sets up jal instruction to write the correct return address in the register file during its WB stage
-module linkMUX(
+module linkMux(
     input link,
     input [31:0] pc,
     input [31:0] qa,

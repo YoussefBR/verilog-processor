@@ -47,6 +47,7 @@ module ID(
     wire dest_rt;
     wire rsrtequ;
     wire linkreg;
+    wire [31:0] rqa;
     assign link = linkreg;
 
     // Wires to aid in legibility and clarity
@@ -58,15 +59,18 @@ module ID(
     wire [5:0] func = insToDecode[5:0];
     wire [15:0] imm = insToDecode[15:0];
     
-    ControlUnit ctrl(.op(op), .func(func), .wr_reg(wr_reg), .mem_to_reg(mem_to_reg), .wr_mem(wr_mem), .alu_op(alu_op), .alu_imm(alu_imm), .dest_rt(dest_rt), .jump(jump), .link(link), .jr(jr), .branch(branch), .i_rs(i_rs), .i_rt(i_rt));
+    ControlUnit ctrl(.op(op), .func(func), .wr_reg(wr_reg), .mem_to_reg(mem_to_reg), .wr_mem(wr_mem), .alu_op(alu_op), .alu_imm(alu_imm), .dest_rt(dest_rt), .jump(jump), .linkreg(linkreg), .jr(jr), .branch(branch), .i_rs(i_rs), .i_rt(i_rt));
     DestMult dMult(.rt(rt), .rd(rd), .dest_rt(dest_rt), .dest_reg(dest_reg), .linkreg(linkreg));
-    RegisterFile regFile(.clk(clk), .rs(rs), .rt(rt), .wb_reg(wb_reg), .wb_dest(wb_dest), .wb_data(wb_data), .rsrtequ(rsrtequ), .qa(qa), .qb(qb), .jump(jump));
+    RegisterFile regFile(.clk(clk), .rs(rs), .rt(rt), .wb_reg(wb_reg), .wb_dest(wb_dest), .wb_data(wb_data), .rsrtequ(rsrtequ), .qa(rqa), .qb(qb), .jump(jump));
     ImmediateExtender immExt(.imm(imm), .imm32(imm32));
 
     always@(*)begin
         if(jump)begin
             qa = insToDecode;
         end
+        else begin
+            qa = rqa;
+        end 
     end
 
 endmodule
@@ -368,12 +372,17 @@ module RegisterFile(
     reg [31:0] registers [0:31];
 
     initial begin
-        registers[0] = 32'd0;
-        registers[1] = 32'd0;
-        registers[2] <= 32'hA00000AA;
-        registers[3] <= 32'h10000011;
-        registers[4] <= 32'h20000022;
-        registers[5] <= 32'h30000033;
+        registers[0] <= 32'd0;
+        registers[1] <= 32'hA00000AA;
+        registers[2] <= 32'h10000011;
+        registers[3] <= 32'h20000022;
+        registers[4] <= 32'h30000033;
+        registers[5] <= 32'h40000044;
+        registers[6] <= 32'h50000055;
+        registers[7] <= 32'h60000066;
+        registers[8] <= 32'h70000077;
+        registers[9] <= 32'h80000088;
+        registers[10] <= 32'h90000099;
     end
 
     always@(*)begin
@@ -384,7 +393,7 @@ module RegisterFile(
         rsrtequ = ~| (qa^qb);
     end
     
-    // Write back on negative edge of clock instead of the positive edge to avoid forwarding from memory
+    // Write back on negative edge of clock instead of the positive edge to write and read in the same cycle
     always@(negedge clk)begin
         if(wb_reg)begin
             registers[wb_dest] = wb_data;

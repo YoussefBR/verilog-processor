@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="synth_1" LaunchPart="xc7z010clg400-1" LaunchTime="1670028821" LaunchIncrCheckpoint="$PSRCDIR/utils_1/imports/synth_1/Processor.dcp">
+<GenRun Id="synth_1" LaunchPart="xc7z010clg400-3" LaunchTime="1671212517" LaunchIncrCheckpoint="$PSRCDIR/utils_1/imports/synth_1/Processor.dcp">
   <File Type="PA-TCL" Name="Processor.tcl"/>
+  <File Type="RDS-PROPCONSTRS" Name="Processor_drc_synth.rpt"/>
   <File Type="REPORTS-TCL" Name="Processor_reports.tcl"/>
   <File Type="RDS-RDS" Name="Processor.vds"/>
+  <File Type="RDS-UTIL" Name="Processor_utilization_synth.rpt"/>
+  <File Type="RDS-UTIL-PB" Name="Processor_utilization_synth.pb"/>
   <File Type="RDS-DCP" Name="Processor.dcp"/>
+  <File Type="VDS-TIMINGSUMMARY" Name="Processor_timing_summary_synth.rpt"/>
+  <File Type="VDS-TIMING-PB" Name="Processor_timing_summary_synth.pb"/>
   <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1" RelGenDir="$PGENDIR/sources_1">
     <Filter Type="Srcs"/>
     <File Path="$PSRCDIR/sources_1/new/EXE.v">
@@ -66,9 +71,15 @@
       <Option Name="TopAutoSet" Val="TRUE"/>
     </Config>
   </FileSet>
-  <FileSet Name="constrs_in" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_1">
-    <Filter Type="Constrs"/>
+  <FileSet Name="constrs_in" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_2">
+    <File Path="$PSRCDIR/constrs_2/new/Processor.xdc">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+      </FileInfo>
+    </File>
     <Config>
+      <Option Name="TargetConstrsFile" Val="$PSRCDIR/constrs_2/new/Processor.xdc"/>
       <Option Name="ConstrsType" Val="XDC"/>
     </Config>
   </FileSet>
@@ -81,6 +92,7 @@
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="implementation"/>
         <Attr Name="UsedInSteps" Val="synth_1"/>
+        <Attr Name="UsedInSteps" Val="synth_1_copy_1"/>
         <Attr Name="AutoDcp" Val="1"/>
       </FileInfo>
     </File>
@@ -89,7 +101,9 @@
     </Config>
   </FileSet>
   <Strategy Version="1" Minor="2">
-    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2022"/>
+    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2022">
+      <Desc>Vivado Synthesis Defaults</Desc>
+    </StratHandle>
     <Step Id="synth_design"/>
   </Strategy>
 </GenRun>
