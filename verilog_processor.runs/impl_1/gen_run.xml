@@ -1,81 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GenRun Id="impl_1" LaunchPart="xc7z010clg400-3" LaunchTime="1671212519">
-  <File Type="OPT-HWDEF" Name="Processor.hwdef"/>
-  <File Type="ROUTE-BUS-SKEW" Name="Processor_bus_skew_routed.rpt"/>
-  <File Type="PA-DCP" Name="Processor.dcp"/>
   <File Type="ROUTE-PWR" Name="Processor_power_routed.rpt"/>
   <File Type="PA-TCL" Name="Processor.tcl"/>
-  <File Type="BITSTR-MMI" Name="Processor.mmi"/>
-  <File Type="OPT-METHODOLOGY-DRC" Name="Processor_methodology_drc_opted.rpt"/>
-  <File Type="INIT-TIMING" Name="Processor_timing_summary_init.rpt"/>
   <File Type="ROUTE-PWR-SUM" Name="Processor_power_summary_routed.pb"/>
   <File Type="REPORTS-TCL" Name="Processor_reports.tcl"/>
-  <File Type="OPT-TIMING" Name="Processor_timing_summary_opted.rpt"/>
-  <File Type="OPT-DCP" Name="Processor_opt.dcp"/>
+  <File Type="BITSTR-MSK" Name="Processor.msk"/>
+  <File Type="ROUTE-CLK" Name="Processor_clock_utilization_routed.rpt"/>
+  <File Type="RDI-RDI" Name="Processor.vdi"/>
+  <File Type="ROUTE-BUS-SKEW" Name="Processor_bus_skew_routed.rpt"/>
+  <File Type="PA-DCP" Name="Processor.dcp"/>
+  <File Type="BG-BIT" Name="Processor.bit"/>
+  <File Type="BG-DRC" Name="Processor.drc"/>
+  <File Type="BG-BGN" Name="Processor.bgn"/>
+  <File Type="BG-BIN" Name="Processor.bin"/>
+  <File Type="BITSTR-RBT" Name="Processor.rbt"/>
+  <File Type="BITSTR-NKY" Name="Processor.nky"/>
+  <File Type="BITSTR-BMM" Name="Processor_bd.bmm"/>
+  <File Type="BITSTR-MMI" Name="Processor.mmi"/>
+  <File Type="BITSTR-SYSDEF" Name="Processor.sysdef"/>
+  <File Type="BITSTR-LTX" Name="debug_nets.ltx"/>
+  <File Type="BITSTR-LTX" Name="Processor.ltx"/>
+  <File Type="WBT-USG" Name="usage_statistics_webtalk.html"/>
   <File Type="OPT-DRC" Name="Processor_drc_opted.rpt"/>
-  <File Type="PWROPT-DCP" Name="Processor_pwropt.dcp"/>
-  <File Type="PWROPT-DRC" Name="Processor_drc_pwropted.rpt"/>
-  <File Type="PWROPT-TIMING" Name="Processor_timing_summary_pwropted.rpt"/>
-  <File Type="PLACE-DCP" Name="Processor_placed.dcp"/>
+  <File Type="OPT-HWDEF" Name="Processor.hwdef"/>
   <File Type="PLACE-IO" Name="Processor_io_placed.rpt"/>
-  <File Type="PLACE-CLK" Name="Processor_clock_utilization_placed.rpt"/>
   <File Type="PLACE-UTIL" Name="Processor_utilization_placed.rpt"/>
   <File Type="PLACE-UTIL-PB" Name="Processor_utilization_placed.pb"/>
   <File Type="PLACE-CTRL" Name="Processor_control_sets_placed.rpt"/>
-  <File Type="PLACE-SIMILARITY" Name="Processor_incremental_reuse_placed.rpt"/>
   <File Type="PLACE-PRE-SIMILARITY" Name="Processor_incremental_reuse_pre_placed.rpt"/>
-  <File Type="BG-BIN" Name="Processor.bin"/>
-  <File Type="PLACE-TIMING" Name="Processor_timing_summary_placed.rpt"/>
-  <File Type="POSTPLACE-PWROPT-DCP" Name="Processor_postplace_pwropt.dcp"/>
-  <File Type="BITSTR-MSK" Name="Processor.msk"/>
-  <File Type="POSTPLACE-PWROPT-TIMING" Name="Processor_timing_summary_postplace_pwropted.rpt"/>
-  <File Type="PHYSOPT-DCP" Name="Processor_physopt.dcp"/>
-  <File Type="PHYSOPT-DRC" Name="Processor_drc_physopted.rpt"/>
-  <File Type="BITSTR-RBT" Name="Processor.rbt"/>
-  <File Type="PHYSOPT-TIMING" Name="Processor_timing_summary_physopted.rpt"/>
-  <File Type="ROUTE-ERROR-DCP" Name="Processor_routed_error.dcp"/>
-  <File Type="ROUTE-DCP" Name="Processor_routed.dcp"/>
-  <File Type="ROUTE-BLACKBOX-DCP" Name="Processor_routed_bb.dcp"/>
   <File Type="ROUTE-DRC" Name="Processor_drc_routed.rpt"/>
   <File Type="ROUTE-DRC-PB" Name="Processor_drc_routed.pb"/>
-  <File Type="ROUTE-DRC-RPX" Name="Processor_drc_routed.rpx"/>
-  <File Type="ROUTE-METHODOLOGY-DRC" Name="Processor_methodology_drc_routed.rpt"/>
-  <File Type="ROUTE-METHODOLOGY-DRC-RPX" Name="Processor_methodology_drc_routed.rpx"/>
-  <File Type="ROUTE-METHODOLOGY-DRC-PB" Name="Processor_methodology_drc_routed.pb"/>
   <File Type="ROUTE-PWR-RPX" Name="Processor_power_routed.rpx"/>
   <File Type="ROUTE-STATUS" Name="Processor_route_status.rpt"/>
   <File Type="ROUTE-STATUS-PB" Name="Processor_route_status.pb"/>
+  <File Type="ROUTE-DCP" Name="Processor_routed.dcp"/>
+  <File Type="ROUTE-ERROR-DCP" Name="Processor_routed_error.dcp"/>
+  <File Type="ROUTE-BLACKBOX-DCP" Name="Processor_routed_bb.dcp"/>
   <File Type="ROUTE-TIMINGSUMMARY" Name="Processor_timing_summary_routed.rpt"/>
   <File Type="ROUTE-TIMING-PB" Name="Processor_timing_summary_routed.pb"/>
   <File Type="ROUTE-TIMING-RPX" Name="Processor_timing_summary_routed.rpx"/>
-  <File Type="ROUTE-SIMILARITY" Name="Processor_incremental_reuse_routed.rpt"/>
-  <File Type="ROUTE-CLK" Name="Processor_clock_utilization_routed.rpt"/>
   <File Type="ROUTE-BUS-SKEW-PB" Name="Processor_bus_skew_routed.pb"/>
   <File Type="ROUTE-BUS-SKEW-RPX" Name="Processor_bus_skew_routed.rpx"/>
+  <File Type="OPT-DCP" Name="Processor_opt.dcp"/>
+  <File Type="PLACE-DCP" Name="Processor_placed.dcp"/>
+  <File Type="PWROPT-DCP" Name="Processor_pwropt.dcp"/>
+  <File Type="POSTPLACE-PWROPT-DCP" Name="Processor_postplace_pwropt.dcp"/>
+  <File Type="PHYSOPT-DCP" Name="Processor_physopt.dcp"/>
   <File Type="POSTROUTE-PHYSOPT-DCP" Name="Processor_postroute_physopt.dcp"/>
   <File Type="POSTROUTE-PHYSOPT-BLACKBOX-DCP" Name="Processor_postroute_physopt_bb.dcp"/>
-  <File Type="POSTROUTE-PHYSOPT-TIMING" Name="Processor_timing_summary_postroute_physopted.rpt"/>
-  <File Type="POSTROUTE-PHYSOPT-TIMING-PB" Name="Processor_timing_summary_postroute_physopted.pb"/>
-  <File Type="POSTROUTE-PHYSOPT-TIMING-RPX" Name="Processor_timing_summary_postroute_physopted.rpx"/>
-  <File Type="POSTROUTE-PHYSOPT-BUS-SKEW" Name="Processor_bus_skew_postroute_physopted.rpt"/>
-  <File Type="BG-BIT" Name="Processor.bit"/>
-  <File Type="POSTROUTE-PHYSOPT-BUS-SKEW-PB" Name="Processor_bus_skew_postroute_physopted.pb"/>
-  <File Type="POSTROUTE-PHYSOPT-BUS-SKEW-RPX" Name="Processor_bus_skew_postroute_physopted.rpx"/>
-  <File Type="BITSTR-NKY" Name="Processor.nky"/>
-  <File Type="BITSTR-BMM" Name="Processor_bd.bmm"/>
+  <File Type="ROUTE-METHODOLOGY-DRC" Name="Processor_methodology_drc_routed.rpt"/>
+  <File Type="ROUTE-METHODOLOGY-DRC-PB" Name="Processor_methodology_drc_routed.pb"/>
+  <File Type="ROUTE-DRC-RPX" Name="Processor_drc_routed.rpx"/>
+  <File Type="ROUTE-METHODOLOGY-DRC-RPX" Name="Processor_methodology_drc_routed.rpx"/>
   <File Type="PDI-FILE" Name="Processor.pdi"/>
   <File Type="RCFI_FILE" Name="Processor.rcfi"/>
   <File Type="CFI_FILE" Name="Processor.cfi"/>
   <File Type="RNPI_FILE" Name="Processor.rnpi"/>
   <File Type="NPI_FILE" Name="Processor.npi"/>
   <File Type="RBD_FILE" Name="Processor.rbd"/>
-  <File Type="BITSTR-LTX" Name="debug_nets.ltx"/>
-  <File Type="BITSTR-LTX" Name="Processor.ltx"/>
-  <File Type="BITSTR-SYSDEF" Name="Processor.sysdef"/>
-  <File Type="BG-BGN" Name="Processor.bgn"/>
-  <File Type="BG-DRC" Name="Processor.drc"/>
-  <File Type="RDI-RDI" Name="Processor.vdi"/>
-  <File Type="WBT-USG" Name="usage_statistics_webtalk.html"/>
   <File Type="ROUTE-RQS" Name="Processor_routed.rqs"/>
   <File Type="POSTROUTE-PHYSOPT-RQS" Name="Processor_postroute_physopted.rqs"/>
   <File Type="ROUTE-RQS-RPT" Name="route_report_qor_suggestions_0.rpt"/>
@@ -172,9 +154,7 @@
     </Config>
   </FileSet>
   <Strategy Version="1" Minor="2">
-    <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2022">
-      <Desc>Default settings for Implementation.</Desc>
-    </StratHandle>
+    <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2022"/>
     <Step Id="init_design"/>
     <Step Id="opt_design"/>
     <Step Id="power_opt_design"/>
@@ -184,5 +164,6 @@
     <Step Id="route_design"/>
     <Step Id="post_route_phys_opt_design"/>
     <Step Id="write_bitstream"/>
+    <Step Id="write_device_image"/>
   </Strategy>
 </GenRun>

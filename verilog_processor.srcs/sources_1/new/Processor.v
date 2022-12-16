@@ -118,6 +118,7 @@ module Processor(
     wire [31:0] qb;
     wire i_rs;
     wire i_rt;
+    wire link;
    
     wire wb_reg;
     wire [4:0] wb_dest;
@@ -142,6 +143,7 @@ module Processor(
         .imm32          ( imm32         ),
         .jump           ( jump          ),
         .branch         ( branch        ),
+        .link           ( link          ),
         .jr             ( jr            ),  
         .i_rs           ( i_rs          ),
         .i_rt           ( i_rt          ) 
@@ -386,10 +388,10 @@ module Program_Counter(
     always@(posedge clk)begin
         if(wr_pc)begin
             if(branch)begin
-                pc <= nextPc + jumpAmount;
+                pc <= pc + $signed(jumpAmount);
             end
             else if(jump)begin
-                pc <= {nextPc[31:28], jumpAmount[25:0], 2'b00};
+                pc <= {pc[31:28], jumpAmount[25:0], 2'b00};
             end
             else if(jr)begin
                 pc <= jumpAmount;

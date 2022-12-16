@@ -46,7 +46,6 @@ module ID(
     // Only used internally
     wire dest_rt;
     wire rsrtequ;
-    wire linkreg;
     wire [31:0] rqa;
     assign link = linkreg;
 
@@ -60,7 +59,7 @@ module ID(
     wire [15:0] imm = insToDecode[15:0];
     
     ControlUnit ctrl(.op(op), .func(func), .wr_reg(wr_reg), .mem_to_reg(mem_to_reg), .wr_mem(wr_mem), .alu_op(alu_op), .alu_imm(alu_imm), .dest_rt(dest_rt), .jump(jump), .linkreg(linkreg), .jr(jr), .branch(branch), .i_rs(i_rs), .i_rt(i_rt));
-    DestMult dMult(.rt(rt), .rd(rd), .dest_rt(dest_rt), .dest_reg(dest_reg), .linkreg(linkreg));
+    DestMult dMult(.rt(rt), .rd(rd), .dest_rt(dest_rt), .dest_reg(dest_reg), .linkreg(link));
     RegisterFile regFile(.clk(clk), .rs(rs), .rt(rt), .wb_reg(wb_reg), .wb_dest(wb_dest), .wb_data(wb_data), .rsrtequ(rsrtequ), .qa(rqa), .qb(qb), .jump(jump));
     ImmediateExtender immExt(.imm(imm), .imm32(imm32));
 
@@ -187,6 +186,18 @@ module ControlUnit(
                         alu_imm <= 1'b0;
                         dest_rt <= 1'b0;
                     end
+                    // jr signals
+                    6'b001000:
+                    begin
+                        wr_reg <= 1'b0;
+                        mem_to_reg <= 1'bX;
+                        wr_mem <= 1'b0;
+                        alu_op <= 4'bXXXX;
+                        alu_imm <= 1'bX;
+                        dest_rt <= 1'bX;
+                        jr <= 1'b1;
+                        i_rt <= 1'b0;
+                    end
                 endcase 
             end
             // lw signals
@@ -272,17 +283,6 @@ module ControlUnit(
                 jump <= 1'b1;
                 i_rs <= 1'b0;
             end
-            // jr signals
-            6'b000000:
-            begin
-                wr_reg <= 1'b0;
-                mem_to_reg <= 1'bX;
-                wr_mem <= 1'b0;
-                alu_op <= 4'bXXXX;
-                alu_imm <= 1'bX;
-                dest_rt <= 1'bX;
-                jr <= 1'b1;
-            end
             // jal signals
             6'b000011:
             begin
@@ -308,6 +308,9 @@ module ControlUnit(
                 if(rsrtequ)begin
                     branch <= 1'b1;
                 end
+                else begin
+                    branch <= 1'b0;
+                end
                 i_rt <= 1'b1;
             end
             // bne signals
@@ -322,6 +325,9 @@ module ControlUnit(
                 branch <= 1'b1;
                 if(!rsrtequ)begin
                     branch <= 1'b1;
+                end
+                else begin
+                    branch <= 1'b0;
                 end
                 i_rt <= 1'b1;
             end

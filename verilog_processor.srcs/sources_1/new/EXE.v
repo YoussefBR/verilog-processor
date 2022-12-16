@@ -87,11 +87,11 @@ module ALU(
         case(alu_op)
             4'b0010:
             begin
-                alu_out = qa + b;
+                alu_out = $signed(qa) + $signed(b);
             end
             4'b0110:
             begin
-                alu_out = qa - b;
+                alu_out = $signed(qa) - $signed(b);
             end
             4'b0000:
             begin

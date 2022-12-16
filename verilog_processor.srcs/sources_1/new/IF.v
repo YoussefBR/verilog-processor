@@ -56,7 +56,7 @@ module InstructionMemory(
 
     wire   [31:0] rom [0:63];          // rom cells: 64 words * 32 bits 
     // rom[word_addr] = instruction    // (pc) label   instruction 
-    /*assign rom[6'h00] = 32'h3c010000;  // (00) main:   lui  $1, 0          
+    assign rom[6'h00] = 32'h3c010000;  // (00) main:   lui  $1, 0          
     assign rom[6'h01] = 32'h34240050;  // (04)         ori  $4, $1, 80     
     assign rom[6'h02] = 32'h0c00001b;  // (08) call:   jal  sum            
     assign rom[6'h03] = 32'h20050004;  // (0c) dslot1: addi $5, $0,  4     
@@ -87,16 +87,10 @@ module InstructionMemory(
     assign rom[6'h1c] = 32'h8c890000;  // (70) loop:   lw   $9, 0($4)      
     assign rom[6'h1d] = 32'h01094020;  // (74) stall:  add  $8, $8, $9     
     assign rom[6'h1e] = 32'h20a5ffff;  // (78)         addi $5, $5, -1     
-    assign rom[6'h1f] = 32'h14a0fffc;  // (7c)         bne  $5, $0, loop   
+    assign rom[6'h1f] = 32'h14a0fff0;  // (7c)         bne  $5, $0, loop   
     assign rom[6'h20] = 32'h20840004;  // (80) dslot5: addi $4, $4,  4     
     assign rom[6'h21] = 32'h03e00008;  // (84)         jr   $31            
     assign rom[6'h22] = 32'h00081000;  // (88) dslot6: sll  $2, $8, 0      
-    */
-    assign rom[6'd0] = {6'b000000, 5'b00001, 5'b00010, 5'b00011, 5'b00000, 6'b100000};
-    assign rom[6'd1] = {6'b000000, 5'b01001, 5'b00011, 5'b00100, 5'b00000, 6'b100010};
-    assign rom[6'd2] = {6'b000000, 5'b00011, 5'b01001, 5'b00101, 5'b00000, 6'b100101};
-    assign rom[6'd3] = {6'b000000, 5'b00011, 5'b01001, 5'b00110, 5'b00000, 6'b100110};
-    assign rom[6'd4] = {6'b000000, 5'b00011, 5'b01001, 5'b00111, 5'b00000, 6'b100100};
     
     always@(*)begin
         nextIns = rom[pc[7:2]];
