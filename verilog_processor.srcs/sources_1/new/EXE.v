@@ -60,6 +60,7 @@ module ALU_In_Mux(
     input       [31:0]  imm32,
     
     output reg  [31:0]  b
+    output reg  [31:0]  a
 );
 
     always@(*)begin

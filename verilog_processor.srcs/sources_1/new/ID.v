@@ -31,14 +31,23 @@ module ID(
     output mem_to_reg,
     output wr_mem,
     output alu_imm,
+    output jump,
+    output jr,
+    output branch,
+    output link,
+    output i_rs,
+    output i_rt,
     output [3:0] alu_op,
     output [4:0] dest_reg,
-    output [31:0] qa,
+    output reg [31:0] qa,
     output [31:0] qb,
     output [31:0] imm32
 );
     // Only used internally
     wire dest_rt;
+    wire rsrtequ;
+    wire linkreg;
+    assign link = linkreg;
 
     // Wires to aid in legibility and clarity
     wire [5:0] op = insToDecode[31:26];
@@ -49,15 +58,22 @@ module ID(
     wire [5:0] func = insToDecode[5:0];
     wire [15:0] imm = insToDecode[15:0];
     
-    ControlUnit ctrl(.op(op), .func(func), .wr_reg(wr_reg), .mem_to_reg(mem_to_reg), .wr_mem(wr_mem), .alu_op(alu_op), .alu_imm(alu_imm), .dest_rt(dest_rt));
-    DestMult dMult(.rt(rt), .rd(rd), .dest_rt(dest_rt), .dest_reg(dest_reg));
-    RegisterFile regFile(.clk(clk), .rs(rs), .rt(rt), .wb_reg(wb_reg), .wb_dest(wb_dest), .wb_data(wb_data), .qa(qa), .qb(qb));
+    ControlUnit ctrl(.op(op), .func(func), .wr_reg(wr_reg), .mem_to_reg(mem_to_reg), .wr_mem(wr_mem), .alu_op(alu_op), .alu_imm(alu_imm), .dest_rt(dest_rt), .jump(jump), .link(link), .jr(jr), .branch(branch), .i_rs(i_rs), .i_rt(i_rt));
+    DestMult dMult(.rt(rt), .rd(rd), .dest_rt(dest_rt), .dest_reg(dest_reg), .linkreg(linkreg));
+    RegisterFile regFile(.clk(clk), .rs(rs), .rt(rt), .wb_reg(wb_reg), .wb_dest(wb_dest), .wb_data(wb_data), .rsrtequ(rsrtequ), .qa(qa), .qb(qb), .jump(jump));
     ImmediateExtender immExt(.imm(imm), .imm32(imm32));
+
+    always@(*)begin
+        if(jump)begin
+            qa = insToDecode;
+        end
+    end
 
 endmodule
 
 // Combinational - Calculates the control signals for the given instruction
 module ControlUnit(
+    input rsrtequ,
     input [5:0] op,
     input [5:0] func,
 
@@ -66,13 +82,26 @@ module ControlUnit(
     output reg wr_mem,
     output reg [3:0] alu_op,
     output reg alu_imm,
-    output reg dest_rt
+    output reg dest_rt,
+    output reg jump,
+    output reg jr,
+    output reg linkreg,
+    output reg branch,
+    output reg i_rs,
+    output reg i_rt
 );
 
     always@(*) begin
+        jump = 1'b0;
+        jr = 1'b0;
+        branch = 1'b0;
+        linkreg = 1'b0;
+        i_rs = 1'b1;
+        i_rt = 1'b0;
         case(op)
             6'b000000:
             begin
+                i_rt = 1'b1;
                 case(func)
                     // add signals
                     6'b100000:
@@ -175,6 +204,7 @@ module ControlUnit(
                 alu_op <= 4'b0010;
                 alu_imm <= 1'b1;
                 dest_rt <= 1'b0;
+                i_rt <= 1'b1;
             end
             // lui signals
             6'b001111:
@@ -235,6 +265,8 @@ module ControlUnit(
                 alu_op <= 4'bXXXX;
                 alu_imm <= 1'bX;
                 dest_rt <= 1'bX;
+                jump <= 1'b1;
+                i_rs <= 1'b0;
             end
             // jr signals
             6'b000000:
@@ -245,16 +277,20 @@ module ControlUnit(
                 alu_op <= 4'bXXXX;
                 alu_imm <= 1'bX;
                 dest_rt <= 1'bX;
+                jr <= 1'b1;
             end
             // jal signals
             6'b000011:
             begin
                 wr_reg <= 1'b1;
-                mem_to_reg <= 1'bX;
+                mem_to_reg <= 1'b0;
                 wr_mem <= 1'b0;
-                alu_op <= 4'bXXXX;
-                alu_imm <= 1'bX;
-                dest_rt <= 1'bX;
+                alu_op <= 4'b0010;
+                alu_imm <= 1'b0;
+                dest_rt <= 1'b0;
+                jump <= 1'b1;
+                linkreg <= 1'b1;
+                i_rs <= 1'b0;
             end
             // beq signals
             6'b000100:
@@ -265,6 +301,10 @@ module ControlUnit(
                 alu_op <= 4'bXXXX;
                 alu_imm <= 1'bX;
                 dest_rt <= 1'bX;
+                if(rsrtequ)begin
+                    branch <= 1'b1;
+                end
+                i_rt <= 1'b1;
             end
             // bne signals
             6'b000101:
@@ -275,6 +315,11 @@ module ControlUnit(
                 alu_op <= 4'bXXXX;
                 alu_imm <= 1'bX;
                 dest_rt <= 1'bX;
+                branch <= 1'b1;
+                if(!rsrtequ)begin
+                    branch <= 1'b1;
+                end
+                i_rt <= 1'b1;
             end
         endcase
     end
@@ -286,6 +331,7 @@ module DestMult(
     input [4:0] rd,
     input [4:0] rt,
     input dest_rt,
+    input linkreg,
 
     output reg [4:0] dest_reg
 );
@@ -293,6 +339,9 @@ module DestMult(
     always@(*)begin
         if(dest_rt)begin
             dest_reg = rt;
+        end
+        else if(linkreg)begin
+            dest_reg = 5'd31;
         end
         else begin
             dest_reg = rd;
@@ -305,11 +354,13 @@ endmodule
 module RegisterFile(
     input clk,
     input wb_reg,
+    input jump,
     input [4:0] rs,
     input [4:0] rt,
     input [4:0] wb_dest,
     input [31:0] wb_data,
 
+    output reg rsrtequ,
     output reg [31:0] qa,
     output reg [31:0] qb
 );
@@ -326,11 +377,15 @@ module RegisterFile(
     end
 
     always@(*)begin
-        qa <= registers[rs];
-        qb <= registers[rt];
+        if(!jump)begin
+            qa = registers[rs];
+        end
+        qb = registers[rt];
+        rsrtequ = ~| (qa^qb);
     end
     
-    always@(posedge clk)begin
+    // Write back on negative edge of clock instead of the positive edge to avoid forwarding from memory
+    always@(negedge clk)begin
         if(wb_reg)begin
             registers[wb_dest] = wb_data;
         end
